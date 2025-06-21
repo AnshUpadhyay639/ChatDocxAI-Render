@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+python-dotenv
+pydub
+numpy
+# Add any other dependencies your utils.py or backend needs
