@@ -4,4 +4,18 @@ python-dotenv
 pydub
 numpy
 faiss-cpu
-# Add any other dependencies your utils.py or backend needs
+gradio
+google-genai
+langchain
+langchain-community
+langchain-google-genai
+google-generativeai
+sentence-transformers
+unstructured[pdf]
+unstructured[docx]
+unstructured[ppt]
+unstructured[excel]
+unstructured[xml]
+torch
+torchaudio
+transformers
