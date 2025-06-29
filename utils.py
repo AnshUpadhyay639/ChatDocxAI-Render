@@ -9,8 +9,8 @@ import logging
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 warnings.filterwarnings("ignore")
 
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from google.generativeai import types
 from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 from langchain_community.document_loaders import(
@@ -32,8 +32,8 @@ def authenticate():
   if not api_key:
     api_key = getpass.getpass("Enter your API Key: ")
   
-  client = genai.Client(api_key=api_key)
-  return client
+  genai.configure(api_key=api_key)
+  return genai
 
 
 def load_documents_gradio(uploaded_files):
@@ -143,11 +143,8 @@ def build_prompt(context_chunks, query):
 
 def ask_gemini(prompt, client):
   """Calls the Gemini API with the given prompt and returns the response."""
-  response = client.models.generate_content(
-    model="gemini-2.0-flash",  # Or your preferred model
-    contents=[prompt],
-    config=types.GenerateContentConfig(max_output_tokens=2048, temperature=0.5, seed=42),
-  )
+  model = client.GenerativeModel('gemini-pro')
+  response = model.generate_content(prompt)
   return response.text
 
 # Speech2Text:
