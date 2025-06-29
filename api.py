@@ -25,7 +25,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://chat-docx-ai-vercel.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -78,3 +78,4 @@ async def ask(
     prompt = build_prompt(top_chunks, query)
     answer = ask_gemini(prompt, client)
     return {"status": "success", "answer": answer.strip(), "transcribed": transcribed}
+
