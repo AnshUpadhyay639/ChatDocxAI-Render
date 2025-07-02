@@ -40,6 +40,19 @@ app.add_middleware(
 client = authenticate()
 store = {"value": None}
 
+
+@app.options("/upload")
+async def options_upload():
+    return JSONResponse(
+        content={"status": "ok"},
+        headers={
+            "Access-Control-Allow-Origin": "https://chat-docx-ai-vercel.vercel.app",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+    )
+
+
 @app.post("/upload")
 async def upload(files: List[UploadFile] = File(...)):
     if not files:
