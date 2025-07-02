@@ -23,9 +23,15 @@ load_dotenv()
 
 app = FastAPI()
 
+# Define the specific origins that are allowed to make requests to your API
+origins = [
+    "http://localhost:3000",  # For local development
+    "https://chat-docx-ai-vercel.vercel.app", 
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
