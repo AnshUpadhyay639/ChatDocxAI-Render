@@ -46,7 +46,7 @@ async def options_upload():
     return JSONResponse(
         content={"status": "ok"},
         headers={
-            "Access-Control-Allow-Origin": "https://chat-docx-ai-vercel.vercel.app",
+            "Access-Control-Allow-Origin": "https://chat-docx-ai-vercel.app",
             "Access-Control-Allow-Methods": "POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Authorization",
         },
@@ -55,12 +55,36 @@ async def options_upload():
 
 @app.post("/upload")
 async def upload(files: List[UploadFile] = File(...)):
-    if not files:
-        return JSONResponse({"status": "error", "message": "No files uploaded."}, status_code=400)
-    raw_docs = load_documents_gradio(files)
-    chunks = split_documents(raw_docs)
-    store["value"] = build_vectorstore(chunks)
-    return {"status": "success", "message": "Document processed successfully! You can now ask questions."}
+    headers = {
+        "Access-Control-Allow-Origin": "https://chat-docx-ai-vercel.app"
+    }
+    try:
+        if not files:
+            return JSONResponse(
+                content={"status": "error", "message": "No files uploaded."},
+                status_code=400,
+                headers=headers
+            )
+        
+        print("Starting document processing...")
+        raw_docs = load_documents_gradio(files)
+        print("Documents loaded. Splitting documents...")
+        chunks = split_documents(raw_docs)
+        print("Documents split. Building vector store...")
+        store["value"] = build_vectorstore(chunks)
+        print("Vector store built successfully.")
+        
+        return JSONResponse(
+            content={"status": "success", "message": "Document processed successfully! You can now ask questions."},
+            headers=headers
+        )
+    except Exception as e:
+        print(f"An error occurred during upload: {e}")
+        return JSONResponse(
+            content={"status": "error", "message": f"An internal server error occurred: {e}"},
+            status_code=500,
+            headers=headers
+        )
 
 @app.post("/ask")
 async def ask(
