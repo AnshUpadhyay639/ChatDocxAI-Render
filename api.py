@@ -5,6 +5,7 @@ from typing import List, Optional
 import numpy as np
 import io
 import os
+import gc
 from dotenv import load_dotenv
 from pydub import AudioSegment
 from utils import (
@@ -66,6 +67,12 @@ async def upload(files: List[UploadFile] = File(...)):
                 headers=headers
             )
         
+        # Explicitly clear memory before processing new files
+        print("Clearing previous vector store from memory...")
+        store["value"] = None
+        gc.collect()
+        print("Memory cleared.")
+
         print("Starting document processing...")
         raw_docs = load_documents_gradio(files)
         print("Documents loaded. Splitting documents...")
